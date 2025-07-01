@@ -52,6 +52,18 @@ async function sendToClientAPI(customerData) {
   }
 }
 
+// Home route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Shopify Webhook Handler is running!',
+    endpoints: {
+      health: '/health',
+      test: '/test-webhook',
+      webhook: '/webhook/shopify/order/created'
+    }
+  });
+});
+
 // Shopify Order Created Webhook Handler
 app.post('/webhook/shopify/order/created', async (req, res) => {
   try {
@@ -156,11 +168,5 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Webhook server running on port ${PORT}`);
-  console.log(`Webhook URL: http://localhost:${PORT}/webhook/shopify/order/created`);
-  console.log(`Test URL: http://localhost:${PORT}/test-webhook`);
-});
-
+// Export for Vercel serverless deployment
 module.exports = app;
